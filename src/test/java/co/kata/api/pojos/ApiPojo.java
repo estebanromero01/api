@@ -8,7 +8,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ApiPojo {
-    private String title = "";
-    private String body = "";
-    private int userId = 0;
+    private int id = 1;
+    private String username = "";
+    private String email = "";
+    private String password = "";
 }

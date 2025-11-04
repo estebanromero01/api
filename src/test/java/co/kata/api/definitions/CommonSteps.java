@@ -5,7 +5,6 @@ import io.cucumber.java.en.Then;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 
 public class CommonSteps {
 
@@ -17,7 +16,6 @@ public class CommonSteps {
 
     @Then("I should see the response with status {int}")
     public void iShouldSeeTheResponseWithStatus(int statusCodeExpected) {
-        baseTest.response.then().log().all();
         baseTest.response.then().statusCode(statusCodeExpected);
     }
 
@@ -31,13 +29,9 @@ public class CommonSteps {
         baseTest.response.then().body(nameProperty, equalTo(valueExpected));
     }
 
-    @And("the property {string} has the item {int}")
-    public void thePropertyHasTheItem(String propertyName, int item) {
-        baseTest.response.then().body(propertyName, hasItem(item));
+    @And("the property {string} must be equal to {int}")
+    public void thePropertyMustBeEqualTo(String nameProperty, int valueExpected) {
+        baseTest.response.then().body(nameProperty, equalTo(valueExpected));
     }
 
-    @And("the property {string} has the item {string}")
-    public void thePropertyHasTheItem(String propertyName, String item) {
-        baseTest.response.then().body(propertyName, hasItem(item));
-    }
 }

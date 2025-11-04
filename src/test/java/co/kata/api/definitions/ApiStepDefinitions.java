@@ -1,6 +1,7 @@
 package co.kata.api.definitions;
 
 import co.kata.api.pojos.ApiPojo;
+import io.cucumber.java.PendingException;
 import io.restassured.specification.RequestSpecification;
 import co.kata.api.utilities.EnvironmentValuesTask;
 import io.restassured.RestAssured;
@@ -19,60 +20,82 @@ public class ApiStepDefinitions {
         this.baseTest = baseTest;
     }
 
-    @Given("I want create a post with title {string} and body {string} for user with ID {int}")
-    public void iWantCreateAPostWithTitleAndBodyForUserWithID(String title, String body, int userId) {
-        modelBody.setTitle(title);
-        modelBody.setBody(body);
-        modelBody.setUserId(userId);
-        request = RestAssured.given().log().all()
+    @Given("i want to get all users")
+    public void iWantToGetAllUsers() {
+        request = RestAssured.given()
+            .baseUri(BASE_URL)
+            .basePath("/users");
+    }
+
+    @When("I send request to get all users")
+    public void iSendRequestToGetAllUsers() {
+        baseTest.response = request.when().get();
+    }
+
+    @Given("i want to get a user with a invalid path in url")
+    public void iWantToGetAUserWithAInvalidPathInUrl() {
+        request = RestAssured.given()
+                .baseUri(BASE_URL)
+                .basePath("/error");
+
+    }
+
+    @Given("i want to add a user with id {int} username {string} email {string} password {string}")
+    public void iWantToAddAUserWithIdUsernameEmailPassword(int id, String username, String email, String password) {
+        modelBody.setId(id);
+        modelBody.setUsername(username);
+        modelBody.setEmail(email);
+        modelBody.setPassword(password);
+        request = RestAssured.given()
                 .baseUri(BASE_URL)
                 .header("Content-Type", "application/json; charset=UTF-8")
                 .body(modelBody)
-                .basePath("/posts");
+                .basePath("/users/");
     }
 
-    @When("I send request to create the post")
-    public void iSendRequestToCreateThePost() {
+    @When("I send request to add user")
+    public void iSendRequestToAddUser() {
         baseTest.response = request.when().post();
     }
 
-    @Given("I want update the title of post with id {int} to {string}")
-    public void iWantUpdateTheTitleOfPostWithIdTo(int id, String newTitle) {
-        modelBody.setTitle(newTitle);
-        request = RestAssured.given().log().all()
+    @Given("i want tp update a user with id {int} username {string} email {string} password {string}")
+    public void iWantTpUpdateAUserWithIdUsernameEmailPassword(int id, String username, String email, String password) {
+        modelBody.setId(id);
+        modelBody.setUsername(username);
+        modelBody.setEmail(email);
+        modelBody.setPassword(password);
+        request = RestAssured.given()
                 .baseUri(BASE_URL)
                 .header("Content-Type", "application/json; charset=UTF-8")
                 .body(modelBody)
-                .basePath("/posts/" + id);
+                .basePath("/users/"+id);
     }
 
-    @When("I send request to update the post")
-    public void iSendRequestToUpdateThePost() {
-        baseTest.response = request.when().patch();
+    @When("I send request to update a user")
+    public void iSendRequestToUpdateAUser() {
+        baseTest.response =  request.when().put();
     }
 
-    @Given("I want delete a post with id {int}")
-    public void iWantDeleteAPostWithId(int id) {
-        request = RestAssured.given().log().all()
+    @Given("i want to delete a user with id {int}")
+    public void iWantToDeleteAUserWithId(int id) {
+        request =  RestAssured.given()
                 .baseUri(BASE_URL)
-                .basePath("/posts/" + id);
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .body(modelBody)
+                .basePath("/users/"+id);
     }
 
-    @When("I send request to delete the post")
-    public void iSendRequestToDeleteThePostWithId() {
-        baseTest.response = request.when().delete();
+    @When("I send request to delete a user")
+    public void iSendRequestToDeleteAUser() {
+        baseTest.response =  request.when().delete();
     }
 
-    @Given("I want read a post of user with ID {int}")
-    public void iWantReadAPostOfUserWithId(int id) {
-        request = RestAssured.given().log().all()
+    @Given("i want to delete a user with id {string}")
+    public void iWantToDeleteAUserWithId(String id) {
+        request =  RestAssured.given()
                 .baseUri(BASE_URL)
-                .param("userId", id)
-                .basePath("/posts");
-    }
-
-    @When("I send request to read the post")
-    public void iSendRequestToReadThePost() {
-        baseTest.response = request.when().get();
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .body(modelBody)
+                .basePath("/users/"+id);
     }
 }
