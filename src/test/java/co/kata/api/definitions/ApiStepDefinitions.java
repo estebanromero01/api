@@ -1,7 +1,6 @@
 package co.kata.api.definitions;
 
 import co.kata.api.pojos.ApiPojo;
-import io.cucumber.java.PendingException;
 import io.restassured.specification.RequestSpecification;
 import co.kata.api.utilities.EnvironmentValuesTask;
 import io.restassured.RestAssured;
@@ -37,7 +36,6 @@ public class ApiStepDefinitions {
         request = RestAssured.given()
                 .baseUri(BASE_URL)
                 .basePath("/error");
-
     }
 
     @Given("i want to add a user with id {int} username {string} email {string} password {string}")
